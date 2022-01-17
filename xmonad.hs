@@ -1,4 +1,4 @@
---Marco's Xmonad Config
+--Xmonad Config
 -- 
 --
 -- A template showing all available configuration hooks,
@@ -6,10 +6,11 @@
 --
 -- Normally, you'd only override those defaults you care about.
 --
-
+--IMPORTS
 import XMonad
 import Data.Monoid
 import System.Exit
+import XMonad.Util.SpawnOnce
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -66,7 +67,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_r     ), spawn "dmenu_run")
 
     -- launch gmrun
-    --, ((modm,               xK_r     ), spawn "gmrun")
+    --,((modm,               xK_r     ), spawn "gmrun")
 
     -- close focused window
     , ((modm,               xK_q     ), kill)
@@ -75,7 +76,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_space ), sendMessage NextLayout)
 
     --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_d), setLayout $ XMonad.layoutHook conf)
+    , ((modm .|. shiftMask, xK_d     ), setLayout $ XMonad.layoutHook conf)
 
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
@@ -111,10 +112,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
     -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
+    , ((modm,               xK_comma ), sendMessage (IncMasterN 1))
 
     -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
+    , ((modm,               xK_period), sendMessage (IncMasterN (-1)))
 
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
@@ -143,11 +144,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
 
     --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    -- mod-{x,c,v}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{x,c,v}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        | (key, sc) <- zip [xK_x, xK_c, xK_v] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
@@ -243,7 +244,10 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+-- ToAdd: wallpaper, compositor
+myStartupHook = do
+        spawnOnce "xwallpaper --zoom ~/.config/wall.png"
+        spawnOnce "picom --experimental-backends --backend glx --xrender-sync-fence" 
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
