@@ -1,66 +1,38 @@
-------------------------------------------------------------------------
---IMPORTS
-------------------------------------------------------------------------
-
-  --Base
 import XMonad
+import XMonad.Config.Xfce
 import System.Exit
 import qualified XMonad.StackSet as W
-
-  --Data
 import Data.Monoid
 import qualified Data.Map        as M
-
-  --Util
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-
-  --Hooks
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.DynamicLog
 
-  --Layouts & Layout Modifiers
+--Layouts & Layout Modifiers
 import XMonad.Layout.Spiral
 import XMonad.Layout.GridVariants(Grid(Grid))
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
 import XMonad.Layout.MultiToggle
 
-
-  --Prompts
-import XMonad.Prompt
-import XMonad.Prompt.XMonad
-import XMonad.Prompt.Man
-import XMonad.Prompt.FuzzyMatch
-  --Actions
-
-
-------------------------------------------------------------------------
+-------------
 --VARIABLES
-------------------------------------------------------------------------
+-------------
+myModMask            :: KeyMask
+myModMask            = mod4Mask 
+
 myTerminal           :: String
-myTerminal           = "alacritty"
-
-myFocusFollowsMouse  :: Bool
-myFocusFollowsMouse  = True
-
-myClickJustFocuses   :: Bool
-myClickJustFocuses   = False
+myTerminal           = "xfce4-terminal"
 
 myBorderWidth        :: Dimension
 myBorderWidth        = 2
 
+myNormalBorderColor  = "#828282"
+myFocusedBorderColor  = "#f7f7f7"
+
 --True spacing will be twice this number
 myWindowSpacing      :: Integer
 myWindowSpacing      = 5 
-
-myModMask            :: KeyMask
-myModMask            = mod4Mask 
-
-myWorkspaces         = ["1","2","3","4","5","6","7","8","9"]
-
-myNormalBorderColor  = "#828282"
-myFocusedBorderColor  = "#f7f7f7"
 
 --Adds spacing to all layouts based on myWindowSpacing
 myLayoutSpacing      = spacingRaw 
@@ -68,10 +40,11 @@ myLayoutSpacing      = spacingRaw
                      (Border myWindowSpacing myWindowSpacing myWindowSpacing myWindowSpacing) 
                      True
                      (Border myWindowSpacing myWindowSpacing myWindowSpacing myWindowSpacing) 
-                     True  
-------------------------------------------------------------------------
---KEY BINDINGS
-------------------------------------------------------------------------
+                     True
+
+-------------
+--KEYBINDINGS
+-------------
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch terminal
@@ -162,7 +135,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         | (key, sc) <- zip [xK_x, xK_c, xK_v] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
-
 ------------------------------------------------------------------------
 --MOUSE BINDINGS
 ------------------------------------------------------------------------
@@ -182,7 +154,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
-
 ------------------------------------------------------------------------
 --LAYOUTS
 ------------------------------------------------------------------------
@@ -193,85 +164,15 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --
 myLayout = avoidStruts $ myLayoutSpacing $ (tiled ||| Mirror tiled ||| Full)
     where tiled = Tall 1 (3/100) (1/2)
-------------------------------------------------------------------------
--- WINDOW RULES
------------------------------------------------------------------------
---
---Set properties for certain windows, like making them floating by default
---
-myManageHook = composeAll
-    [ className =? "Krita"        --> doFloat
-    , className =? "Gimp"         --> doFloat
-    , className =? "Blender"      --> doFloat]
-
-------------------------------------------------------------------------
--- EVENT HANDLING
-------------------------------------------------------------------------A
---
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
-myEventHook = mempty
-
-------------------------------------------------------------------------
---STATUS BARS & LOGGING
-------------------------------------------------------------------------
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-myLogHook = return ()
-
-------------------------------------------------------------------------
---STARTUP HOOK
-------------------------------------------------------------------------
---
---Perform an arbitrary action each time xmonad starts. Does not run on
---restart, you must fully quit and start Xmonad
---
-myStartupHook = do
-        spawnOnce "lxsession &"
-        --Monitor dependent, needs to be changed based on your setup
-        spawnOnce "xrandr --output HDMI-1-0 --mode 1920x1080"
-        spawnOnce "xwallpaper --zoom ~/.config/wall.png &"
-        spawnOnce "picom --experimental-backends --backend glx --xrender-sync-fence" 
-
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
-main = do
-  xmproc<-spawnPipe "xmobar -x 0 /home/mb/.config/xmobarrc"
-  xmonad $ docks defaults 
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = def {
-      -- simple stuff
-        terminal           = myTerminal,
-        focusFollowsMouse  = myFocusFollowsMouse,
-        clickJustFocuses   = myClickJustFocuses,
-        borderWidth        = myBorderWidth,
-        modMask            = myModMask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
-
-      -- key bindings
-        keys               = myKeys,
-        mouseBindings      = myMouseBindings,
-
-      -- hooks, layouts
-        layoutHook         = myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
-        logHook            = myLogHook,
-        startupHook        = myStartupHook
-    }
+-------------------------------------------------------------------------------
+--MAIN
+-------------------------------------------------------------------------------
+main = xmonad xfceConfig
+            { modMask = myModMask 
+            , terminal =myTerminal
+            , borderWidth=myBorderWidth
+            , normalBorderColor=myNormalBorderColor
+            , focusedBorderColor=myFocusedBorderColor
+            , keys = myKeys
+            , mouseBindings=myMouseBindings
+            , layoutHook = myLayout}
