@@ -13,6 +13,12 @@ cp ~/.dotfiles/pacman.conf /etc/pacman.conf
 pacman-key --populate archlinux
 
 yay -S brave librewolf bitwarden neovim neovim-plug onlyoffice nvidia xmonad xmonad-contrib
+#Copy nvim config
 cd .config && mkdir nvim
 cp ~/.dotfiles/init.vim .config/nvim/init.vim
+
+#Copy xmonad config
+mkdir .xmonad
+cp ~/.dotfiles/xmonad.hs .xmonad/xmonad.hs
+
 ntpd -qg #Resynchronizes clock in case of timezone issues when dual booting w/windows
