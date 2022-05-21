@@ -10,6 +10,7 @@ makepkg -si
 #Enable arch repos
 yay -S artix-archlinux-support
 sudo cp ~/.dotfiles/pacman.conf /etc/pacman.conf
+yay -Sy
 sudo pacman-key --populate archlinux
 
 yay -S brave librewolf bitwarden neovim neovim-plug onlyoffice nvidia xmonad xmonad-contrib dmenu
@@ -21,4 +22,4 @@ cp ~/.dotfiles/init.vim .config/nvim/init.vim
 mkdir .xmonad
 cp ~/.dotfiles/xmonad.hs .xmonad/xmonad.hs
 
-ntpd -qg #Resynchronizes clock in case of timezone issues when dual booting w/windows
+sudo ntpd -qg #Resynchronizes clock in case of timezone issues when dual booting w/windows
