@@ -23,3 +23,5 @@ mkdir .xmonad
 cp ~/.dotfiles/xmonad.hs .xmonad/xmonad.hs
 
 sudo ntpd -qg #Resynchronizes clock in case of timezone issues when dual booting w/windows
+
+echo Now you get to do all the fun manual configuration of XFCE!
