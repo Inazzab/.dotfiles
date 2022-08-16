@@ -1,0 +1,5 @@
+#+title: Cover Letter
+* Intro
+ *Mention something about wanting to do this job.* I am a first year electrical engineering student at UC San Diego who has a strong desire to gain more practical experience working with electronics and people in a professional setting
+* Body
+ I have been very interested in electronics and computers for quite some time, and over this past year I had plenty of opportunities to put use that passion. Currently, I am experimenting with a variety of circuit designs with the UCSD Summer Internship Prep Program. Working together in
