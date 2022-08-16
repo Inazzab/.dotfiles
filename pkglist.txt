@@ -1,0 +1,1 @@
+thunderbird easyeffects zoom qtile qtile-extra cmake ripgrep firefox brave xorg (latex for fedora) emacs timeshift(or other update tool) ly rofi kitty 
